@@ -1,5 +1,7 @@
 <?php
 
+require_once('fpdf/fpdf.php');
+
 class certificate_zfs extends certificate {
 
     public $name = 'Zentrum für Schlüsselqualifikationen';

@@ -1,5 +1,7 @@
 <?php
 
+require_once('fpdf/fpdf.php');
+
 class certificate_profi_ru extends certificate {
 
     public $name = 'Profi.RU';

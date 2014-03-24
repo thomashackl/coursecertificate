@@ -1,5 +1,7 @@
 <?php
 
+require_once('fpdf/fpdf.php');
+
 class certificate_jura extends certificate {
 
     public $name = 'Schlüsselqualifikationen Jura';

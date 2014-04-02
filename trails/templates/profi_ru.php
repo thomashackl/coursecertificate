@@ -1,7 +1,5 @@
 <?php
 
-require_once('fpdf/fpdf.php');
-
 class certificate_profi_ru extends certificate {
 
     public $name = 'Profi.RU';
@@ -54,7 +52,7 @@ class certificate_profi_ru extends certificate {
 // Header
 //$pdf->Image('img/uni_passau_logo.png', 100, 5);
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->Write(5, 'Zentrum für Schlüsselqualifikationen');
+        $pdf->Write(5, 'Zentrum für Schlüsselkompetenzen');
         $pdf->Ln();
         $pdf->Write(5, 'Department für Katholische Theologie');
         $pdf->SetX(0);

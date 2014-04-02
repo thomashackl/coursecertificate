@@ -1,5 +1,8 @@
 <?php
 
+require_once "vendor/fpdf/fpdf.php";
+require_once "vendor/fpdi/fpdi.php";
+
 class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
 
     function __construct() {
@@ -26,8 +29,8 @@ class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
         // Baue jetzt einen autoloader für alle models (ja ich bin faul)
         $GLOBALS['autoloader_path'] = $this->getPluginPath() . '/trails/models/';
         spl_autoload_register(function ($class) {
-                    include_once $GLOBALS['autoloader_path'] . $class . '.php';
-                });
+            include_once $GLOBALS['autoloader_path'] . $class . '.php';
+        });
 
         /*
          * Jetzt brauchen wir nur noch einen Trailsdispatcher der die restliche

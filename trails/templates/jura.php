@@ -151,13 +151,12 @@ class certificate_jura extends certificate {
         $pdf->SetY($pdf->GetY() + $topMargin);
 
         // Studiengaenge ausgeben
-        foreach ($this->tree->children as $item) {
-            if (!empty($item->seminare)) {
+        foreach ($this->header as $header => $item ){
                 $pdf->SetFont('Arial', 'B', $headersize);
-                $pdf->Cell(180, $cellHeight, $item->name, 0, 1, "C");
+                $pdf->Cell(180, $cellHeight, $header, 0, 1, "C");
 
                 // Veranstaltungen ausgeben
-                foreach ($item->seminare as $ver) {
+                foreach ($item as $ver) {
                     $pdf->SetFont('Arial', '', $textsize);
                     $tmp = $ver['Name'];
 
@@ -173,7 +172,6 @@ class certificate_jura extends certificate {
                     $pdf->MultiCell(180, $cellHeight, $tmp, 0, "C");
                 }
                 $pdf->Ln(3);
-            }
         }
 
         // Descriptional text.

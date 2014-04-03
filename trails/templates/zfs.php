@@ -6,71 +6,6 @@ class certificate_zfs extends certificate {
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
     public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Kurse aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Kursangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
     
-    public function oldDataFetchIsNowObsolete() {
-// Descriptional text underneath the course list.
-
-        $db = new DB_Seminar();
-
-        $fullname = get_fullname_from_uname($_POST['user']);
-
-        $selectedCourses = array();
-        $count = 0;
-
-// Check which sem_tree items are relevant
-        $semTree = new StudipSemTree(array('visible_only' => true));
-        $semTreeIds = array();
-        foreach ($_POST['sem_tree_ids'] as $semTreeItem) {
-            $semTreeIds = array_merge($semTreeIds, $semTree->getKidsKids($semTreeItem), array($semTreeItem));
-        }
-
-// Get courses.
-        $query = "SELECT s.Name, s.Seminar_id, st.sem_tree_id AS sem_tree_id, 
-        st.name AS sem_tree_name
-    FROM seminare s
-        JOIN seminar_sem_tree sst ON (s.Seminar_id=sst.seminar_id)
-        JOIN sem_tree st ON (sst.sem_tree_id=st.sem_tree_id)
-    WHERE s.Seminar_id IN ('" . implode("', '", $_POST['courses']) . "')
-        AND st.sem_tree_id IN ('" . implode("', '", $semTreeIds) . "')
-    ORDER BY st.priority ASC, s.start_time ASC, s.VeranstaltungsNummer ASC, s.Name ASC;";
-        $db->query($query);
-        while ($db->next_record()) {
-            if (!stristr($db->f("name"), "Nachrangige Berücksichtigung")) {
-                $db2 = new DB_Seminar();
-// Get lecturers.
-                $lecturers = array();
-                $query2 = "SELECT " . $GLOBALS['_fullname_sql']['full'] . " AS fullname 
-            FROM auth_user_md5 
-                JOIN user_info USING (user_id)
-            WHERE auth_user_md5.user_id IN ('" .
-                        implode("', '", array_keys(get_seminar_dozent($db->f("Seminar_id")))) .
-                        "')
-            ORDER BY Nachname ASC, Vorname ASC";
-                $db2->query($query2);
-                while ($db2->next_record()) {
-                    $lecturers[] = $db2->f("fullname");
-                }
-// Get duration.
-                $duration = 0;
-                $query3 = "SELECT content
-            FROM datafields_entries
-            WHERE datafield_id='8554741ae3a5cfcc38c6741ab0c9ce5e' 
-                AND range_id = '" . $db->f("Seminar_id") . "'";
-                $db2->query($query3);
-                if ($db2->next_record()) {
-                    $duration = intval($db2->f("content"));
-                }
-                $selectedCourses[$db->f('sem_tree_id')]['name'] = $db->f('sem_tree_name');
-                $selectedCourses[$db->f('sem_tree_id')]['sem'][] = array(
-                    'id' => $db->f("Seminar_id"),
-                    'name' => $db->f("Name"),
-                    'dozenten' => $lecturers,
-                    'dauer' => $duration
-                );
-                $count++;
-            }
-        }
-    }
-
     public function export() {
 // Create certificate.
         $pdf = new FPDF();
@@ -108,13 +43,12 @@ class certificate_zfs extends certificate {
 //new dBug($this->tree->children);
 //die;
 // Studiengaenge ausgeben
-        foreach ($this->tree->children as $item) {
-            if ($item->seminare) {
+        foreach ($this->header as $header => $item) {
                 $pdf->SetFont('Arial', 'B', $headersize);
-                $pdf->Cell(180, $cellHeight, $item->name, 0, 1, "C");
+                $pdf->Cell(180, $cellHeight, $header, 0, 1, "C");
 
 // Veranstaltungen ausgeben
-                foreach ($item->seminare as $ver) {
+                foreach ($item as $ver) {
                     //new dBug($ver);
                     $pdf->SetFont('Arial', '', $textsize);
                     $tmp = $ver['Name'];
@@ -131,7 +65,6 @@ class certificate_zfs extends certificate {
                     $pdf->MultiCell(180, $cellHeight, $tmp, 0, "C");
                 }
                 $pdf->Ln(3);
-            }
         }
 
 // Descriptional text.

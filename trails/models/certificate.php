@@ -10,7 +10,7 @@ class certificate {
 
     public function __construct($user = null, $whitelist = null) {
         if ($whitelist != null) {
-        $this->whitelist = $whitelist;
+            $this->whitelist = $whitelist;
         }
         if ($user) {
             $this->user = $user;
@@ -85,10 +85,8 @@ WHERE range_id = ?";
                 $obj->seminare[] = $result;
                 $this->semester[$result['semester']][] = $result;
                 $this->allCourses[] = $result['seminar_id'];
+                $this->header[$obj->name][] = $result;
             }
         }
     }
-
 }
-
-?>

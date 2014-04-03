@@ -54,9 +54,8 @@ class certificate_zfs extends certificate {
                     $tmp = $ver['Name'];
 
 // Dozenten und Stunden ausgeben
-                    if ($ver['dauer'] != 0) {
-                        $hours = ($ver['dauer'] == 1 ? ' Stunde' : ' Stunden');
-                        $tmp .= ' (' . $ver['dauer'] . $hours . ')';
+                    if ($ver['dauer']) {
+                        $tmp .= ' (' . $ver['dauer'].')';
                     }
                     if (!empty($ver['dozenten'])) {
                         $tmp .= ' - ';

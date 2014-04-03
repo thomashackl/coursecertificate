@@ -47,12 +47,22 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     }
 
     public function loadDuration(&$data) {
-        $sql = "SELECT ROUND((SUM(end_time - date) / 3600), 0) FROM termine
-WHERE range_id = ?";
         $db = DBManager::get();
-        $stmt = $db->prepare($sql);
-        $stmt->execute(array($data['seminar_id']));
-        $data['dauer'] = $stmt->fetch(PDO::FETCH_COLUMN, 0);
+
+        // Check if we got a swsentry
+        $sws = $db->prepare("SELECT content FROM datafields_entries WHERE range_id = ? AND datafield_id = '8554741ae3a5cfcc38c6741ab0c9ce5e'");
+        $sws->execute(array($data['seminar_id']));
+        if ($entry = $sws->fetchColumn(0)) {
+            $data['dauer'] = $entry;
+        } else {
+            // Try to guess it
+            $stmt = $db->prepare("SELECT ROUND((SUM(end_time - date) / 3600), 0) FROM termine WHERE range_id = ?");
+            $stmt->execute(array($data['seminar_id']));
+            $duration = $stmt->fetch(PDO::FETCH_COLUMN, 0);
+            if ($duration && $duration != 0) {
+                $data['dauer'] = ($duration == 1 ? ' Stunde' : ' Stunden');
+            }
+        }
     }
 
     public function loadSeminars() {
@@ -89,4 +99,5 @@ WHERE range_id = ?";
             }
         }
     }
+
 }

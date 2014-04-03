@@ -60,7 +60,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             $stmt->execute(array($data['seminar_id']));
             $duration = $stmt->fetch(PDO::FETCH_COLUMN, 0);
             if ($duration && $duration != 0) {
-                $data['dauer'] = ($duration == 1 ? ' Stunde' : ' Stunden');
+                $data['dauer'] = $duration . ' '.($duration == 1 ? ' Stunde' : ' Stunden');
             }
         }
     }

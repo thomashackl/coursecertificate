@@ -26,7 +26,7 @@
  * 
  * It'll be loaded and extended by FPDF_TPL.
  */
-class FPDF extends TCPDF {
+class TCPDF_FPDF extends TCPDF {
     
 	function _putstream($s) {
 		$this->_out($this->_getstream($s));

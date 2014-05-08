@@ -4,7 +4,7 @@ class certificate_zfs extends certificate {
 
     public $name = 'Zentrum für Schlüsselkompetenzen';
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
-    public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Kurse aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Kursangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
+    public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
     
     public function export() {
 // Create certificate.
@@ -19,7 +19,7 @@ class certificate_zfs extends certificate {
         $pdf->Cell(180, 18, $this->fullname, 0, 1, "C");
 
         $pdf->SetFont('Arial', '', 11);
-        $pdf->Cell(180, 5, "hat erfolgreich an " . $this->getCount() . " Kursen aus folgenden Bereichen", 0, 1, "C");
+        $pdf->Cell(180, 5, "hat erfolgreich an " . $this->getCount() . " Veranstaltungen aus folgenden Bereichen", 0, 1, "C");
         $pdf->Cell(180, 5, "am Zentrum für Schlüsselkompetenzen der Universität Passau teilgenommen:", 0, 1, "C");
 
 // Default font and margin sizes.

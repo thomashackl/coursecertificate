@@ -3,7 +3,7 @@
 class certificate_jura extends certificate {
 
     public $name = 'Schlüsselkompetenzen Jura';
-    public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Kurse aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Kursangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
+    public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
 
     public function export($seminars) {
@@ -28,7 +28,7 @@ class certificate_jura extends certificate {
                 "Universität Passau im Zeitraum von " .
                 strftime('%B %Y', $this->start) .
                 " bis " . strftime('%B %Y', $this->end) . " an " . $this->getCount() .
-                " Kursen aus folgenden Bereichen erfolgreich teilgenommen:", 0, "C");
+                " Veranstaltungen aus folgenden Bereichen erfolgreich teilgenommen:", 0, "C");
         // Re-set locale to original value.
         setlocale(LC_TIME, $currentLocale);
 

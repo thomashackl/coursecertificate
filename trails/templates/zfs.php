@@ -6,7 +6,44 @@ class certificate_zfs extends certificate {
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
     public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
     
+    public function loadSeminarsForPDF() {
+        $this->header = array();
+        $sql = "SELECT VeranstaltungsNummer, s.Name, sd.description as semester,
+            st.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
+            s.ects, s.Beschreibung
+            FROM seminare s
+            JOIN seminar_sem_tree sst USING (seminar_id)
+            JOIN sem_tree st USING (sem_tree_id)
+            JOIN seminar_user su USING (Seminar_id)
+            JOIN auth_user_md5 md5 USING (user_id)
+            LEFT JOIN termine t ON (s.seminar_id = t.range_id)
+            JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
+            WHERE md5.username = ?
+            AND s.Name NOT LIKE 'Nachrangige Ber%'
+            GROUP BY s.seminar_id, st.sem_tree_id
+            ORDER BY st.`priority`, s.`Name`";
+        $db = DBManager::get();
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array($this->user));
+        while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if ((!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
+                if ($this->start == 0 || $this->start > $result['start']) {
+                    $this->start = $result['start'];
+                }
+
+                $this->end = $result['end'];
+                $this->loadLecturers($result);
+                $this->loadDuration($result);
+                $obj->seminare[] = $result;
+                $this->semester[$result['semester']][] = $result;
+                $this->allCourses[] = $result['seminar_id'];
+                $this->header[$obj->name][] = $result;
+            }
+        }
+    }
+
     public function export() {
+        $this->loadSeminarsForPDF();
 // Create certificate.
         $pdf = new FPDF();
         $pdf->AddPage();

@@ -79,7 +79,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             WHERE md5.username = ?
             AND s.Name NOT LIKE 'Nachrangige Ber%'
             GROUP BY s.seminar_id, st.sem_tree_id
-            ORDER BY s.start_time";
+            ORDER BY s.start_time, s.`VeranstaltungsNummer`, s.`Name`";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
         $stmt->execute(array($this->user));

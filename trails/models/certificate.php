@@ -66,23 +66,24 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     }
 
     public function loadSeminars() {
+        $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
         $sql = "SELECT VeranstaltungsNummer, s.Name, sd.description as semester,
-            st.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
+            sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
             s.ects, s.Beschreibung
             FROM seminare s
             JOIN seminar_sem_tree sst USING (seminar_id)
-            JOIN sem_tree st USING (sem_tree_id)
             JOIN seminar_user su USING (Seminar_id)
             JOIN auth_user_md5 md5 USING (user_id)
             LEFT JOIN termine t ON (s.seminar_id = t.range_id)
             JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
             WHERE md5.username = ?
             AND s.Name NOT LIKE 'Nachrangige Ber%'
-            GROUP BY s.seminar_id, st.sem_tree_id
-            ORDER BY s.start_time, s.`VeranstaltungsNummer`, s.`Name`";
+            AND sst.sem_tree_id IN (?)
+            GROUP BY s.seminar_id, sst.sem_tree_id
+            ORDER BY s.start_time, s.VeranstaltungsNummer, s.Name";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->user));
+        $stmt->execute(array($this->user, $semtree->getKidsKids($this->sem_tree_id)));
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ((!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
                 if ($this->start == 0 || $this->start > $result['start']) {

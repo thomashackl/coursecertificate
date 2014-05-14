@@ -8,33 +8,44 @@ class certificate_jura extends certificate {
 
     public function loadSeminarsForPDF() {
         $this->header = array();
+        $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
+        $mainSubjects = $semtree->getKids($this->sem_tree_id);
         $sql = "SELECT VeranstaltungsNummer, s.Name, sd.description as semester,
-            st.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
-            s.ects, s.Beschreibung
+                sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
+                s.ects, s.Beschreibung
             FROM seminare s
-            JOIN seminar_sem_tree sst USING (seminar_id)
-            JOIN sem_tree st USING (sem_tree_id)
-            JOIN seminar_user su USING (Seminar_id)
-            JOIN auth_user_md5 md5 USING (user_id)
-            LEFT JOIN termine t ON (s.seminar_id = t.range_id)
-            JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
+                JOIN seminar_sem_tree sst USING (seminar_id)
+                JOIN seminar_user su USING (Seminar_id)
+                JOIN auth_user_md5 md5 USING (user_id)
+                LEFT JOIN termine t ON (s.seminar_id = t.range_id)
+                JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
             WHERE md5.username = ?
-            AND s.Name NOT LIKE 'Nachrangige Ber%'
-            GROUP BY s.seminar_id, st.sem_tree_id
-            ORDER BY st.`priority`, s.`Name`";
+                AND s.Name NOT LIKE 'Nachrangige Ber%'
+                AND sst.sem_tree_id IN (?)";
+        if ($this->whitelist) {
+            $sql .= " AND s.`Seminar_id` IN (?)";
+        }
+        $sql .=  " GROUP BY s.seminar_id, sst.sem_tree_id
+            ORDER BY s.start_time, s.VeranstaltungsNummer, s.Name";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->user));
-        while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ((!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
+        foreach ($mainSubjects as $subject) {
+            if ($this->whitelist) {
+                $stmt->execute(array($this->user, array_merge(array($subject), $semtree->getKidsKids($subject)), $this->whitelist));
+            } else {
+                $stmt->execute(array($this->user, array_merge(array($subject), $semtree->getKidsKids($subject))));
+            }
+            while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $obj = $this->tree->search($subject);
                 if ($this->start == 0 || $this->start > $result['start']) {
                     $this->start = $result['start'];
                 }
-
                 $this->end = $result['end'];
                 $this->loadLecturers($result);
                 $this->loadDuration($result);
                 $obj->seminare[] = $result;
+                $this->semester[$result['semester']][] = $result;
+                $this->allCourses[] = $result['seminar_id'];
                 $this->semester[$result['semester']][] = $result;
                 $this->allCourses[] = $result['seminar_id'];
                 $this->header[$obj->name][] = $result;

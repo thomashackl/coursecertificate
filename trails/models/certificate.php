@@ -101,4 +101,50 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         }
     }
 
+    public function loadSeminarsForPDF() {
+        $this->header = array();
+        $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
+        $mainSubjects = $semtree->getKids($this->sem_tree_id);
+        $sql = "SELECT DISTINCT s.VeranstaltungsNummer, s.Name, sd.description as semester,
+                sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
+                s.ects, s.Beschreibung
+            FROM seminare s
+                JOIN seminar_sem_tree sst USING (seminar_id)
+                JOIN seminar_user su USING (Seminar_id)
+                JOIN auth_user_md5 md5 USING (user_id)
+                LEFT JOIN termine t ON (s.seminar_id = t.range_id)
+                JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
+            WHERE md5.username = ?
+                AND s.Name NOT LIKE 'Nachrangige Ber%'
+                AND sst.sem_tree_id IN (?)";
+        if ($this->whitelist) {
+            $sql .= " AND s.`Seminar_id` IN (?)";
+        }
+        $sql .=  " GROUP BY s.seminar_id, sst.sem_tree_id
+            ORDER BY s.start_time, s.VeranstaltungsNummer, s.Name";
+        $db = DBManager::get();
+        $stmt = $db->prepare($sql);
+        foreach ($mainSubjects as $subject) {
+            if ($this->whitelist) {
+                $parameters = array($this->user, array_merge(array($subject), $semtree->getKidsKids($subject)), $this->whitelist);
+            } else {
+                $parameters = array($this->user, array_merge(array($subject), $semtree->getKidsKids($subject)));
+            }
+            $stmt->execute($parameters);
+            $i=0;
+            $obj = $this->tree->search($subject);
+            while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $i++;
+                if ($this->start == 0 || $this->start > $result['start']) {
+                    $this->start = $result['start'];
+                }
+                $this->end = $result['end'];
+                $this->loadLecturers($result);
+                $this->loadDuration($result);
+                $obj->seminare[] = $result;
+                $this->header[$obj->name][] = $result;
+            }
+        }
+    }
+
 }

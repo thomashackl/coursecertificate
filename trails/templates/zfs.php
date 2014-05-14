@@ -19,9 +19,18 @@ class certificate_zfs extends certificate {
         $pdf->SetFont('Arial', 'B', 16);
         $pdf->Cell(180, 18, $this->fullname, 0, 1, "C");
 
+        // Get current locale time setting.
+        $currentLocale = setlocale(LC_TIME, "0");
+        // Set to German locale.
+        setlocale(LC_TIME, "de_DE");
         $pdf->SetFont('Arial', '', 11);
-        $pdf->Cell(180, 5, "hat erfolgreich an " . $this->getCount() . " Veranstaltungen aus folgenden Bereichen", 0, 1, "C");
-        $pdf->Cell(180, 5, "am Zentrum für Schlüsselkompetenzen der Universität Passau teilgenommen:", 0, 1, "C");
+        $pdf->MultiCell(180, 5, "hat am Zentrum für Schlüsselkompetenzen der " .
+                "Universität Passau im Zeitraum von " .
+                strftime('%B %Y', $this->start) .
+                " bis " . strftime('%B %Y', $this->end) . " an " . $this->getCount() .
+                " Veranstaltungen aus folgenden Bereichen erfolgreich teilgenommen:", 0, "C");
+        // Re-set locale to original value.
+        setlocale(LC_TIME, $currentLocale);
 
 // Default font and margin sizes.
         $textsize = 11;

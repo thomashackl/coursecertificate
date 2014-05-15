@@ -138,7 +138,9 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
                 if ($this->start == 0 || $this->start > $result['start']) {
                     $this->start = $result['start'];
                 }
-                $this->end = $result['end'];
+                if ($this->end == 0 || $this->end < $result['end']) {
+                    $this->end = $result['end'];
+                }
                 $this->loadLecturers($result);
                 $this->loadDuration($result);
                 $obj->seminare[] = $result;

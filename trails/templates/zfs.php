@@ -40,7 +40,7 @@ class certificate_zfs extends certificate {
         $topMargin = 4;
         $bottomMargin = 4;
 // If there are more than x courses, start to adapt font size.
-        if ($this->getCount() > 17) {
+        if ($this->getCount() > 23) {
             $textsize = max(6, $textsize - round($this->getCount() / 15));
             $headersize = max(6, $headersize - round($this->getCount() / 15));
             $infosize = max(6, $infosize - round($this->getCount() / 15));

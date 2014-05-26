@@ -14,6 +14,7 @@ class IndexController extends StudipController {
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
         $quicksearch = QuickSearch::get("username", new StandardSearch("username"))
+                ->withButton()
                 ->setInputStyle("width: 240px");
 
         $quicksearch->defaultValue(Request::get('username'), Request::get('username_parameter'));

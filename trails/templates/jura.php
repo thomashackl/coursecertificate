@@ -89,6 +89,32 @@ class certificate_jura extends certificate {
         $pdf->Output("zfs_cert_" . $this->user . ".pdf", "D");
     }
 
+    public function loadLecturers(&$data) {
+        $sql = "SELECT md5.`user_id` FROM seminar_user su
+                JOIN auth_user_md5 md5 USING(user_id)
+            WHERE su.seminar_id = ? AND status = 'dozent'
+            ORDER BY su.`position`, md5.`Nachname`, md5.`Vorname`, md5.`username`";
+        $db = DBManager::get();
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array($data['seminar_id']));
+        $lecturers = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        $data['dozenten'] = array();
+        foreach ($lecturers as $l) {
+            $u = User::find($l);
+            $name = $u->getFullname();
+            $datafield = $db->fetchFirst(
+                "SELECT `content`
+                FROM `datafields_entries`
+                WHERE `range_id`=?
+                    AND `datafield_id`='e96d12f041e6a432e8f9c77a026b3731'",
+                array($l));
+            if ($datafield[0]) {
+                $name .= ' ('.$datafield[0].')';
+            }
+            $data['dozenten'][] = $name;
+        }
+    }
+
 }
 
 ?>

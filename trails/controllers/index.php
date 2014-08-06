@@ -13,7 +13,7 @@ class IndexController extends StudipController {
         // Lade das standard StudIP Layout
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
-        $quicksearch = QuickSearch::get("username", new StandardSearch("username"))
+        $quicksearch = QuickSearch::get("username", new FullUserSearch("username"))
                 ->withButton()
                 ->setInputStyle("width: 240px");
 

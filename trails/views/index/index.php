@@ -25,7 +25,7 @@
     <? foreach ($semester as $key => $courses): ?>
         <h3><?= $key ?></h3>
         <? foreach ($courses as $course): ?>
-            <input type="checkbox" name="whitelist[]" value="<?= $course['seminar_id'] ?>" checked><?= $course['Name'] ?> <br />
+            <input type="checkbox" name="whitelist[]" value="<?= $course['seminar_id'] ?>" checked><?= $course['VeranstaltungsNummer'] ? $course['VeranstaltungsNummer'].' '.$course['Name'] : $course['Name'] ?> <br />
         <? endforeach; ?>
     <? endforeach; ?>
 </form>

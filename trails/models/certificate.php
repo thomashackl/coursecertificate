@@ -7,6 +7,8 @@ class certificate {
     public $semester = array();
     public $fullname;
     public $whitelist;
+    // exclude sem tree ids
+    public $exclude_sem_tree_ids = array();
 
     public function __construct($user = null, $whitelist = null) {
         if ($whitelist != null) {
@@ -78,12 +80,18 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
             WHERE md5.username = ?
             AND s.Name NOT LIKE 'Nachrangige Ber%'
+            AND s.Name NOT LIKE 'Unentschuldigt%'
             AND sst.sem_tree_id IN (?)
+            ".($this->exclude_sem_tree_ids ? "AND sst.sem_tree_id NOT IN (?)" : "")."
             GROUP BY s.seminar_id, sst.sem_tree_id
             ORDER BY s.start_time, s.VeranstaltungsNummer, s.Name";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->user, $semtree->getKidsKids($this->sem_tree_id)));
+        $parameters = array($this->user, $semtree->getKidsKids($this->sem_tree_id));
+        if ($this->exclude_sem_tree_ids) {
+            $parameters[] = $this->exclude_sem_tree_ids;
+        }
+        $stmt->execute($parameters);
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ((!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
                 if ($this->start == 0 || $this->start > $result['start']) {
@@ -104,7 +112,13 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     public function loadSeminarsForPDF() {
         $this->header = array();
         $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
-        $mainSubjects = $semtree->getKids($this->sem_tree_id);
+        $allSubjects = $semtree->getKids($this->sem_tree_id);
+        $mainSubjects = array();
+        foreach ($allSubjects as $s) {
+            if (!in_array($s, $this->exclude_sem_tree_ids)) {
+                $mainSubjects[] = $s;
+            }
+        }
         $sql = "SELECT DISTINCT s.VeranstaltungsNummer, s.Name, sd.description as semester,
                 sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
                 s.ects, s.Beschreibung
@@ -116,6 +130,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
                 JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
             WHERE md5.username = ?
                 AND s.Name NOT LIKE 'Nachrangige Ber%'
+                AND s.Name NOT LIKE 'Unentschuldigt%'
                 AND sst.sem_tree_id IN (?)";
         if ($this->whitelist) {
             $sql .= " AND s.`Seminar_id` IN (?)";

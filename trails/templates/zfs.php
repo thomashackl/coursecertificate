@@ -5,6 +5,7 @@ class certificate_zfs extends certificate {
     public $name = 'Zentrum für Schlüsselkompetenzen';
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
     public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
+    public $exclude_sem_tree_ids = array();
 
     public function export() {
         $this->loadSeminarsForPDF();

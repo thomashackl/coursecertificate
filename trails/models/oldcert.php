@@ -63,6 +63,7 @@ WHERE range_id = ?";
             LEFT JOIN termine t ON (s.seminar_id = t.range_id)
             JOIN semester_data sd ON (sd.beginn <= s.start_time AND sd.ende >= s.start_time)
             WHERE md5.username = ?
+            AND s.visible = 1
             AND s.Name NOT LIKE 'Nachrangige Berücksichtigung %'
             AND s.Name NOT LIKE 'Unentschuldigt%'
             GROUP BY s.seminar_id, st.sem_tree_id

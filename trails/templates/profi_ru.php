@@ -2,6 +2,8 @@
 
 class certificate_profi_ru extends certificate {
 
+    public $order = 3;
+
     public $name = 'Profi.RU';
     public $sem_tree_id = 'dfceefe635ecec2c1d81d90e9dc772cb';
 

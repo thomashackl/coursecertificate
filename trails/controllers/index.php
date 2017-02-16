@@ -52,11 +52,15 @@ class IndexController extends StudipController {
             $classname = "certificate_" . basename($path, ".php");
             $class = new $classname;
             $templates[basename($path, ".php")]['name'] = $class->name;
+            $templates[basename($path, ".php")]['order'] = $class->order ?: 99;
             if (Request::get('certificate') == basename($path, ".php")) {
                 $templates[basename($path, ".php")]['selected'] = "selected='selected'";
             }
             $this->certificate[basename($path, ".php")] = $class;
         }
+        usort($templates, function($a, $b) {
+            return $a['order'] > $b['order'];
+        });
         return $templates;
     }
 

@@ -10,7 +10,7 @@
             <td>    
                 <select name="certificate" size="1">
                     <? foreach ($templates as $key => $template): ?>
-                        <option value="<?= $key ?>" <?= $template['selected'] ?>><?= $template['name'] ?></option>
+                        <option value="<?= $template['path'] ?>" <?= $template['selected'] ?>><?= $template['name'] ?></option>
                     <? endforeach; ?>
                 </select>
             </td>

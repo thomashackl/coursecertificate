@@ -67,9 +67,16 @@ class certificate_zfs extends certificate {
                     $tmp = $ver['Name'];
 
 // Dozenten und Stunden ausgeben
-                    if ($ver['dauer']) {
-                        $tmp .= ' (' . $ver['dauer'].')';
+                    $tmp .= ' (' . date('d.m.Y', $ver['start']);
+
+                    if (date('d.m.Y', $ver['start']) != date('d.m.Y', $ver['end'])) {
+                        $tmp .= ' - ' . date('d.m.Y', $ver['end']);
                     }
+
+                    if ($ver['dauer']) {
+                        $tmp .= ', ' . $ver['dauer'];
+                    }
+                    $tmp .= ')';
                     if (!empty($ver['dozenten'])) {
                         $tmp .= ' - ';
                         $tmp .= implode(", ", $ver['dozenten']);
@@ -96,5 +103,3 @@ class certificate_zfs extends certificate {
     }
 
 }
-
-?>

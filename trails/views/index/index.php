@@ -25,7 +25,15 @@
     <? foreach ($semester as $key => $courses): ?>
         <h3><?= $key ?></h3>
         <? foreach ($courses as $course): ?>
-            <input type="checkbox" name="whitelist[]" value="<?= $course['seminar_id'] ?>" checked><?= $course['VeranstaltungsNummer'] ? $course['VeranstaltungsNummer'].' '.$course['Name'] : $course['Name'] ?> <br />
+            <input type="checkbox" name="whitelist[]" value="<?= $course['seminar_id'] ?>" checked>
+            <?= $course['VeranstaltungsNummer'] ?
+                htmlReady($course['VeranstaltungsNummer'].' '.$course['Name']) :
+                htmlReady($course['Name']) ?>
+            (<?= date('d.m.Y', $course['start']) ?><?=
+                date('d.m.Y', $course['start']) != date('d.m.Y', $course['end']) ?
+                    ' - ' . date('d.m.Y', $course['end']) :
+                    '' ?>, <?= htmlReady($course['dauer']) ?>)
+            <br>
         <? endforeach; ?>
     <? endforeach; ?>
 </form>

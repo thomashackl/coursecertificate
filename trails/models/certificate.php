@@ -71,7 +71,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
         $sql = "SELECT VeranstaltungsNummer, s.Name, sd.description as semester,
             sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
-            s.ects, s.Beschreibung
+            s.ects, s.Beschreibung, su.`status`
             FROM seminare s
             JOIN seminar_sem_tree sst USING (seminar_id)
             JOIN seminar_user su USING (Seminar_id)
@@ -82,6 +82,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             AND s.visible = 1
             AND s.Name NOT LIKE 'Nachrangige Ber%'
             AND s.Name NOT LIKE 'Unentschuldigt%'
+            AND su.`status` IN ('user', 'autor')
             AND sst.sem_tree_id IN (?)
             ".($this->exclude_sem_tree_ids ? "AND sst.sem_tree_id NOT IN (?)" : "")."
             GROUP BY s.seminar_id, sst.sem_tree_id
@@ -122,7 +123,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         }
         $sql = "SELECT DISTINCT s.VeranstaltungsNummer, s.Name, sd.description as semester,
                 sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
-                s.ects, s.Beschreibung
+                s.ects, s.Beschreibung, su.`status`
             FROM seminare s
                 JOIN seminar_sem_tree sst USING (seminar_id)
                 JOIN seminar_user su USING (Seminar_id)
@@ -133,6 +134,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
                 AND s.visible = 1
                 AND s.Name NOT LIKE 'Nachrangige Ber%'
                 AND s.Name NOT LIKE 'Unentschuldigt%'
+                AND su.`status` IN ('user', 'autor')
                 AND sst.sem_tree_id IN (?)";
         if ($this->whitelist) {
             $sql .= " AND s.`Seminar_id` IN (?)";

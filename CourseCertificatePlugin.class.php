@@ -8,6 +8,8 @@ class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
     function __construct() {
         parent::__construct();
 
+        StudipAutoloader::addAutoloadPath(__DIR__.'/trails/models');
+
         // Lade den Navigationsabschnitt "tools"
         $navigation = Navigation::getItem('/tools');
 
@@ -25,12 +27,6 @@ class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
      * @param string Die restliche Pfadangabe
      */
     function perform($unconsumed_path) {
-
-        // Baue jetzt einen autoloader für alle models (ja ich bin faul)
-        $GLOBALS['autoloader_path'] = $this->getPluginPath() . '/trails/models/';
-        spl_autoload_register(function ($class) {
-            include_once $GLOBALS['autoloader_path'] . $class . '.php';
-        });
 
         /*
          * Jetzt brauchen wir nur noch einen Trailsdispatcher der die restliche

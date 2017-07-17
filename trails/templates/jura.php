@@ -119,5 +119,3 @@ class certificate_jura extends certificate {
     }
 
 }
-
-?>

@@ -39,5 +39,3 @@ class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
     }
 
 }
-
-?>

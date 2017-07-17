@@ -36,4 +36,3 @@ class certificate_tree extends sqlTree {
     }
 
 }
-?>

@@ -137,5 +137,3 @@ class certificate_profi_ru extends certificate {
     }
 
 }
-
-?>

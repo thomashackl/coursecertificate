@@ -4,8 +4,8 @@ class certificate_jura extends certificate {
 
     public $order = 2;
 
-    public $name = 'Schlüsselkompetenzen Jura';
-    public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
+    public $name = 'SchlÃ¼sselkompetenzen Jura';
+    public $beschreibung = "Das Zentrum fÃ¼r SchlÃ¼sselkompetenzen der UniversitÃ¤t Passau ist eine zentrale wissenschaftliche Einrichtung, die als ErgÃ¤nzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich Ã¼berfachlicher Kompetenzen anbietet. Studierende, die das grÃ¶ÃŸtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persÃ¶nlichen Weiterentwicklung.";
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
 
     public $exclude_sem_tree_ids = array('c0b4af8e91ef5022141ec58f17e69b21');
@@ -27,8 +27,8 @@ class certificate_jura extends certificate {
         // Set to German locale.
         setlocale(LC_TIME, "de_DE");
         $pdf->SetFont('Arial', '', 11);
-        $pdf->MultiCell(180, 5, "hat am Zentrum für Schlüsselkompetenzen der " .
-                "Universität Passau im Zeitraum von " .
+        $pdf->MultiCell(180, 5, "hat am Zentrum fÃ¼r SchlÃ¼sselkompetenzen der " .
+                "UniversitÃ¤t Passau im Zeitraum von " .
                 strftime('%B %Y', $this->start) .
                 " bis " . strftime('%B %Y', $this->end) . " an " . $this->getCount() .
                 " Veranstaltungen aus folgenden Bereichen erfolgreich teilgenommen:", 0, "C");

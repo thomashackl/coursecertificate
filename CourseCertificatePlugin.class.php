@@ -21,7 +21,7 @@ class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
     }
 
     /**
-     * Wird das Plugin tatsächlich aufgerufen, so landen wir in der perform
+     * Wird das Plugin tatsÃ¤chlich aufgerufen, so landen wir in der perform
      * Methode
      * 
      * @param string Die restliche Pfadangabe
@@ -30,7 +30,7 @@ class CourseCertificatePlugin extends StudipPlugin implements SystemPlugin {
 
         /*
          * Jetzt brauchen wir nur noch einen Trailsdispatcher der die restliche
-         * Arbeit für uns erledigt. An dieser Stelle springt also die Plugin-
+         * Arbeit fÃ¼r uns erledigt. An dieser Stelle springt also die Plugin-
          * verarbeitung weiter in den Trailsordner
          */
         $trails_root = $this->getPluginPath() . "/trails";

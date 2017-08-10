@@ -64,5 +64,3 @@ class sqlTree extends leafTree {
     }
 
 }
-
-?>

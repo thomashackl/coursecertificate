@@ -1,4 +1,5 @@
 pluginclassname=CourseCertificatePlugin
 pluginname=Teilnahmezertifikat
 origin=intelec
-version=2.0.1
+version=2.0.2
+studipMinVersion=4.0

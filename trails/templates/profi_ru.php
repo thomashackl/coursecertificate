@@ -54,9 +54,9 @@ class certificate_profi_ru extends certificate {
 // Header
 //$pdf->Image('img/uni_passau_logo.png', 100, 5);
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->Write(5, 'Zentrum für Schlüsselkompetenzen');
+        $pdf->Write(5, 'Zentrum fÃ¼r SchlÃ¼sselkompetenzen');
         $pdf->Ln();
-        $pdf->Write(5, 'Department für Katholische Theologie');
+        $pdf->Write(5, 'Department fÃ¼r Katholische Theologie');
         $pdf->SetX(0);
         $pdf->SetY($pdf->GetY() + 40);
 
@@ -66,7 +66,7 @@ class certificate_profi_ru extends certificate {
         $pdf->SetY($pdf->GetY() + 18);
 
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(0, 8, "Hiermit bestätigen wir", 0, 1, "C");
+        $pdf->Cell(0, 8, "Hiermit bestÃ¤tigen wir", 0, 1, "C");
         $pdf->SetY($pdf->GetY() + 8);
 
         $pdf->SetFont('Arial', 'B', 16);

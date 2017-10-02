@@ -6,7 +6,15 @@ class certificate_zfs extends certificate {
 
     public $name = 'KompetenzPAss';
     public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
-    public $beschreibung = "Das Zentrum für Schlüsselkompetenzen der Universität Passau ist eine zentrale wissenschaftliche Einrichtung, die als Ergänzung zum akademischen Fachstudium Veranstaltungen aus dem Bereich überfachlicher Kompetenzen anbietet. Studierende, die das größtenteils freiwillige Veranstaltungsangebot in Anspruch nehmen, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
+    public $beschreibung = "Das Zentrum für Karriere und Kompetenzen (ZKK) ".
+		"bietet als Ergänzung zum akademischen Fachstudium Seminare und ".
+		"IT-Kurse zum Erwerb überfachlicher Kompetenzen an. Durch diese ".
+		"Kompetenzen werden Reflexivität und Verantwortungsbewusstsein ".
+		"gestärkt sowie selbstorganisiertes und eigenständiges Lernen ".
+		"vermittelt und gefördert. Studierende, die in allen drei ".
+		"Kompetenzbereichen Seminare besucht haben, beweisen damit ".
+		"Eigeninitiative und eine hohe Motivation zur persönlichen ".
+		"Weiterentwicklung.";
     public $exclude_sem_tree_ids = array('c0b4af8e91ef5022141ec58f17e69b21');
 
     public function export() {
@@ -20,18 +28,19 @@ class certificate_zfs extends certificate {
 
 
         $pdf->SetFont('Arial', 'B', 16);
-        $pdf->Cell(180, 18, $this->fullname, 0, 1, "C");
+        $pdf->Cell(180, 18, legacy_studip_utf8decode($this->fullname), 0, 1, "C");
 
         // Get current locale time setting.
         $currentLocale = setlocale(LC_TIME, "0");
         // Set to German locale.
         setlocale(LC_TIME, "de_DE");
         $pdf->SetFont('Arial', '', 11);
-        $pdf->MultiCell(180, 5, "hat am Zentrum für Schlüsselkompetenzen der " .
-                "Universität Passau im Zeitraum von " .
+        $pdf->MultiCell(180, 5, 
+			legacy_studip_utf8decode("hat am Zentrum für Karriere und ".
+				"Kompetenzen der Universität Passau im Zeitraum von " .
                 strftime('%B %Y', $this->start) .
                 " bis " . strftime('%B %Y', $this->end) . " an " . $this->getCount() .
-                " Veranstaltungen aus folgenden Bereichen erfolgreich teilgenommen:", 0, "C");
+                " Veranstaltungen aus folgenden Bereichen erfolgreich teilgenommen:"), 0, "C");
         // Re-set locale to original value.
         setlocale(LC_TIME, $currentLocale);
 
@@ -58,7 +67,7 @@ class certificate_zfs extends certificate {
 // Studiengaenge ausgeben
         foreach ($this->header as $header => $item) {
                 $pdf->SetFont('Arial', 'B', $headersize);
-                $pdf->Cell(180, $cellHeight, $header, 0, 1, "C");
+                $pdf->Cell(180, $cellHeight, legacy_studip_utf8decode($header), 0, 1, "C");
 
 // Veranstaltungen ausgeben
                 foreach ($item as $ver) {
@@ -81,7 +90,7 @@ class certificate_zfs extends certificate {
                         $tmp .= ' - ';
                         $tmp .= implode(", ", $ver['dozenten']);
                     }
-                    $pdf->MultiCell(180, $cellHeight, $tmp, 0, "C");
+                    $pdf->MultiCell(180, $cellHeight, legacy_studip_utf8decode($tmp), 0, "C");
                 }
                 $pdf->Ln(3);
         }
@@ -90,7 +99,7 @@ class certificate_zfs extends certificate {
         $pdf->SetY(225);
         $pdf->SetFont('Arial', '', 11);
         $pdf->SetY($pdf->GetY() + $bottomMargin);
-        $pdf->MultiCell(0, 5, $this->beschreibung);
+        $pdf->MultiCell(0, 5, legacy_studip_utf8decode($this->beschreibung));
 
 
 // Signature
@@ -99,7 +108,7 @@ class certificate_zfs extends certificate {
         $pdf->Cell(60, 4, "Passau, den " . date("d.m.Y"), 0, 1, "");
 
 // Send PDF.
-        $pdf->Output("zfs_cert_" . $this->user . ".pdf", "D");
+        $pdf->Output("cert_" . $this->user . ".pdf", "D");
     }
 
 }

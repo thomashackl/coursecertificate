@@ -15,7 +15,7 @@ class certificate_zfs extends certificate {
 		"Kompetenzbereichen Seminare besucht haben, beweisen damit ".
 		"Eigeninitiative und eine hohe Motivation zur persönlichen ".
 		"Weiterentwicklung.";
-    public $exclude_sem_tree_ids = array('c0b4af8e91ef5022141ec58f17e69b21');
+    public $exclude_sem_tree_ids = array('c0b4af8e91ef5022141ec58f17e69b21', '814e28f539e0952dfe1f35bca8800bee');
 
     public function export() {
         $this->loadSeminarsForPDF();

@@ -114,7 +114,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     public function loadSeminarsForPDF() {
         $this->header = array();
         $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
-        $allSubjects = $semtree->getKids($this->sem_tree_id);
+        $allSubjects = $semtree->getKidsKids($this->sem_tree_id);
         $mainSubjects = array();
         foreach ($allSubjects as $s) {
             if (!in_array($s, $this->exclude_sem_tree_ids)) {

@@ -114,13 +114,17 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     public function loadSeminarsForPDF() {
         $this->header = array();
         $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
-        $allSubjects = $semtree->getKidsKids($this->sem_tree_id);
+        $allSubjects = $this->getSortedKidsKids($semtree, $this->sem_tree_id);
         $mainSubjects = array();
         foreach ($allSubjects as $s) {
             if (!in_array($s, $this->exclude_sem_tree_ids)) {
-                $mainSubjects[] = $s;
+
+                if (!in_array($s, $this->invisible_sem_tree_ids)) {
+                    $mainSubjects[] = $s;
+                }
             }
         }
+
         $sql = "SELECT DISTINCT s.VeranstaltungsNummer, s.Name, sd.description as semester,
                 sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
                 s.ects, s.Beschreibung, su.`status`
@@ -167,5 +171,30 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             }
         }
     }
+
+    /**
+     * returns all direct kids and kids of kids and so on...
+     *
+     * @access   public
+     * @param    string  $item_id
+     * @param    bool    $in_recursion   only used in recursion
+     * @return   array
+     */
+    protected function getSortedKidsKids(&$semtree, $item_id, $in_recursion = false){
+        static $kidskids;
+        if (!$kidskids || !$in_recursion){
+            $kidskids = array();
+        }
+        $num_kids = $semtree->getNumKids($item_id);
+        if ($num_kids){
+            $kids = $semtree->getKids($item_id);
+            for ($i = 0; $i < $num_kids; ++$i){
+                array_push($kidskids, $kids[$i]);
+                $this->getSortedKidsKids($semtree, $kids[$i], true);
+            }
+        }
+        return (!$in_recursion) ? $kidskids : null;
+    }
+
 
 }

@@ -31,13 +31,15 @@
             <?php if ($course['status'] == 'autor') : ?>
                 <input type="checkbox" name="whitelist[]" value="<?= $course['seminar_id'] ?>" checked>
             <?php endif ?>
-            <?= $course['VeranstaltungsNummer'] ?
-                htmlReady($course['VeranstaltungsNummer'].' '.$course['Name']) :
-                htmlReady($course['Name']) ?>
-            (<?= date('d.m.Y', $course['start']) ?><?=
-                date('d.m.Y', $course['start']) != date('d.m.Y', $course['end']) ?
-                    ' - ' . date('d.m.Y', $course['end']) :
-                    '' ?>, <?= htmlReady($course['dauer']) ?>)
+            <a href="<?= URLHelper::getURL('dispatch.php/course/overview', ['cid' => $course['Seminar_id']]) ?>">
+                <?= $course['VeranstaltungsNummer'] ?
+                    htmlReady($course['VeranstaltungsNummer'].' '.$course['Name']) :
+                    htmlReady($course['Name']) ?>
+                (<?= date('d.m.Y', $course['start']) ?><?=
+                    date('d.m.Y', $course['start']) != date('d.m.Y', $course['end']) ?
+                        ' - ' . date('d.m.Y', $course['end']) :
+                        '' ?>, <?= htmlReady($course['dauer']) ?>)
+            </a>
             <?php if ($course['status'] == 'user') : ?>
                 </span>
             <?php endif ?>

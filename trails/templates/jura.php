@@ -6,28 +6,10 @@ class certificate_jura extends certificate {
 
     public $name = 'Schlüsselkompetenzen Jura';
     public $beschreibung = "Das Zentrum für Karriere und Kompetenzen (ZKK) bietet als Ergänzung zum akademischen Fachstudium Seminare und IT-Kurse zum Erwerb überfachlicher Kompetenzen an. Durch diese Kompetenzen werden Reflexivität und Verantwortungsbewusstsein gestärkt sowie selbstorganisiertes und eigenständiges Lernen vermittelt und gefördert. Studierende, die in allen drei Kompetenzbereichen Seminare besucht haben, beweisen damit Eigeninitiative und eine hohe Motivation zur persönlichen Weiterentwicklung.";
-    public $sem_tree_id = '23bd2f0b9f437b60729290733961853d';
+    public $sem_tree_id = '814e28f539e0952dfe1f35bca8800bee';
 
-    public $exclude_sem_tree_ids = array(
-        'c0b4af8e91ef5022141ec58f17e69b21',
-        '814e28f539e0952dfe1f35bca8800bee'
-    );
-    public $invisible_sem_tree_ids = array(
-        'c0b4af8e91ef5022141ec58f17e69b21',
-        '814e28f539e0952dfe1f35bca8800bee',
-        '30906bf846b53c8a9e2fe21d2180f818',
-        '6a29bdcc362a3c2f5ea09efda19c5e49',
-        '42e7d7a3481c706ed1d54dc072d552e0',
-        '701cff7eda6876be28da2fcd62ded48a',
-        '0b30d769e0dcf80fda308272b87814ca',
-        '7df63ae06d54e6c6ed7dcd48b80259a0',
-        '9d88ab9caba20e819765c4b5a96b63b2',
-        '855037ff174597580d4ba3f1267a9328',
-        '304aa7e5e378dc260ffa596d7df50559',
-        '04f08c9ca84f098d236d2befd6da7940',
-        '2b86bdce5d33e98ac4f205e841c2354b',
-        '0db0a0bb3aab3cd62dcd8c17fa20b312'
-    );
+    public $exclude_sem_tree_ids = array();
+    public $invisible_sem_tree_ids = array();
 
     public function export($seminars) {
         $this->loadSeminarsForPDF();

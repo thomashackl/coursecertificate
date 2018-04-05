@@ -48,7 +48,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         $data['dozenten'] = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
-    public function loadDuration(&$data) {
+    public function loadDuration(&$data, $lang = 'de_DE') {
         $db = DBManager::get();
 
         // Check if we got a swsentry
@@ -62,7 +62,9 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             $stmt->execute(array($data['seminar_id']));
             $duration = $stmt->fetch(PDO::FETCH_COLUMN, 0);
             if ($duration && $duration != 0) {
-                $data['dauer'] = $duration . ' '.($duration == 1 ? ' Stunde' : ' Stunden');
+                $data['dauer'] = $duration . ' '.($duration == 1 ?
+                        ($lang == 'de_DE' ? ' Stunde' : ' hour') :
+                        ($lang == 'de_DE' ? ' Stunden' : ' hours'));
             }
         }
     }
@@ -111,7 +113,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         }
     }
 
-    public function loadSeminarsForPDF() {
+    public function loadSeminarsForPDF($lang = 'de_DE') {
         $this->header = array();
         $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
         $allSubjects = $this->getSortedKidsKids($semtree, $this->sem_tree_id);
@@ -125,7 +127,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             }
         }
 
-        $sql = "SELECT DISTINCT s.VeranstaltungsNummer, s.Name, sd.description as semester,
+        $sql = "SELECT DISTINCT s.Seminar_id, s.VeranstaltungsNummer, s.Name, sd.description as semester,
                 sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
                 s.ects, s.Beschreibung, su.`status`
             FROM seminare s
@@ -156,6 +158,23 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             $stmt->execute($parameters);
             $i=0;
             $obj = $this->tree->search($subject);
+
+            // Fetch translated names if necessary.
+            if ($lang != 'de_DE') {
+                $translation = DBManager::get()->fetchOne(
+                    "SELECT `value` FROM `i18n`
+                        WHERE `object_id` = :id
+                            AND `table` = 'sem_tree'
+                            AND `field` = 'name'
+                            AND `lang` = :lang
+                        LIMIT 1",
+                    ['id' => $subject, 'lang' => $lang]
+                );
+                if ($translation) {
+                    $obj->name = $translation['value'];
+                }
+            }
+
             while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $i++;
                 if ($this->start == 0 || $this->start > $result['start']) {
@@ -165,8 +184,9 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
                     $this->end = $result['end'];
                 }
                 $this->loadLecturers($result);
-                $this->loadDuration($result);
+                $this->loadDuration($result, $lang);
                 $obj->seminare[] = $result;
+
                 $this->header[$obj->name][] = $result;
             }
         }

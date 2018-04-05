@@ -77,9 +77,6 @@ class certificate_zfs_en extends certificate {
         }
 
         $pdf->SetY($pdf->GetY() + $topMargin);
-        $log = fopen($GLOBALS['TMP_PATH'] . '/cert.log', 'w');
-        fwrite($log, print_r($this->header, 1));
-        fclose($log);
 // Studiengaenge ausgeben
         foreach ($this->header as $header => $item) {
                 $pdf->SetFont('Arial', 'B', $headersize);

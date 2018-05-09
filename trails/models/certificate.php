@@ -71,7 +71,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
 
     public function loadSeminars() {
         $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
-        $sql = "SELECT s.Seminar_id, s.VeranstaltungsNummer, s.Name, sd.description as semester,
+        $sql = "SELECT DISTINCT s.Seminar_id, s.VeranstaltungsNummer, s.Name, sd.description as semester,
             sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
             s.ects, s.Beschreibung, su.`status`
             FROM seminare s

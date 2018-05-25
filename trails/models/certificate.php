@@ -55,6 +55,9 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         $sws = $db->prepare("SELECT content FROM datafields_entries WHERE range_id = ? AND datafield_id = '8554741ae3a5cfcc38c6741ab0c9ce5e'");
         $sws->execute(array($data['seminar_id']));
         if ($entry = $sws->fetchColumn(0)) {
+            if ($lang == 'en_GB') {
+                $entry = str_replace(['Stunden', 'Stunde'], ['hours', 'hour'], $entry);
+            }
             $data['dauer'] = $entry;
         } else {
             // Try to guess it

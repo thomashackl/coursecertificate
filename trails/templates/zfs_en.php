@@ -93,10 +93,10 @@ class certificate_zfs_en extends certificate {
                         $ver['Name'];
 
 // Dozenten und Stunden ausgeben
-                    $tmp .= ' (' . date('d/m/Y', $ver['start']);
+                    $tmp .= ' (' . date('Y/m/d', $ver['start']);
 
-                    if (date('d/m/Y', $ver['start']) != date('d/m/Y', $ver['end'])) {
-                        $tmp .= ' - ' . date('d/m/Y', $ver['end']);
+                    if (date('Y/m/d', $ver['start']) != date('Y/m/d', $ver['end'])) {
+                        $tmp .= ' - ' . date('Y/m/d', $ver['end']);
                     }
 
                     if ($ver['dauer']) {
@@ -122,7 +122,7 @@ class certificate_zfs_en extends certificate {
 // Signature
         $pdf->SetY(270);
         $pdf->SetFont('Arial', '', 11);
-        $pdf->Cell(60, 4, "Passau, " . date("d/m/Y"), 0, 1, "");
+        $pdf->Cell(60, 4, "Passau, " . date("Y/m/d"), 0, 1, "");
 
 // Send PDF.
         $pdf->Output("cert_" . $this->user . ".pdf", "D");

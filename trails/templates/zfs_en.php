@@ -30,7 +30,10 @@ class certificate_zfs_en extends certificate {
         '304aa7e5e378dc260ffa596d7df50559',
         '04f08c9ca84f098d236d2befd6da7940',
         '2b86bdce5d33e98ac4f205e841c2354b',
-        '0db0a0bb3aab3cd62dcd8c17fa20b312'
+        '0db0a0bb3aab3cd62dcd8c17fa20b312',
+        'bccb57d8ab0d9790506b6709faef7700',
+        'b3c835fe3857b319ba883279c1aee454',
+        'd2a285dd346228c7858390c40ab183cc'
     );
 
     public function export() {

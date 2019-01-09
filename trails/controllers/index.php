@@ -22,16 +22,16 @@ class IndexController extends StudipController {
             )
         );
 
-        $quicksearch = QuickSearch::get("username", $psearch)
+        $this->quicksearch = QuickSearch::get("username", $psearch)
                 ->withButton()
-                ->setInputStyle("width: 240px");
-
-        $quicksearch->defaultValue(Request::get('username'), Request::get('username_parameter'));
-        $this->quicksearch = $quicksearch->render();
+                ->setInputStyle("width: 240px")
+                ->defaultValue(Request::get('username'), Request::get('username_parameter'));
         $this->templates = $this->load_templates();
     }
 
     public function index_action() {
+        Navigation::activateItem('/tools/coursecert');
+
         $this->semester = array();
         if ($user = Request::get('username')) {
             $classname = "certificate_" . Request::get('certificate');

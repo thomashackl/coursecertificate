@@ -30,7 +30,7 @@ class leafTree {
     }
     
     public function hasChildren() {
-        return count($this->children);
+        return is_array($this->children) ? count($this->children) : 0;
     }
 
     public function getData() {

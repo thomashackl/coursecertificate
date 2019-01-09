@@ -89,15 +89,23 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             AND s.Name NOT LIKE 'Unentschuldigt%'
             AND su.`status` IN ('user', 'autor')
             AND sst.sem_tree_id IN (?)
-            ".($this->exclude_sem_tree_ids ? "AND sst.sem_tree_id NOT IN (?)" : "")."
             GROUP BY s.seminar_id, sst.sem_tree_id
             ORDER BY s.start_time, s.VeranstaltungsNummer, s.Name";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $parameters = array($this->user, $semtree->getKidsKids($this->sem_tree_id));
-        if ($this->exclude_sem_tree_ids) {
-            $parameters[] = $this->exclude_sem_tree_ids;
+        if (is_array($this->process_only_semtree_ids) && count($this->process_only_semtree_ids) > 0) {
+            $ids = [];
+            foreach ($this->process_only_semtree_ids as $i) {
+                $ids = array_merge($ids, [$i], $semtree->getKidsKids($i));
+            }
+
+            $semtree_ids = array_filter($semtree->getKidsKids($this->sem_tree_id), function ($kid) use ($ids) {
+                return in_array($kid, $ids);
+            });
+        } else {
+            $semtree_ids = $semtree->getKidsKids($this->sem_tree_id);
         }
+        $parameters = array($this->user, $semtree_ids);
         $stmt->execute($parameters);
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ((!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
@@ -122,11 +130,8 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         $allSubjects = $this->getSortedKidsKids($semtree, $this->sem_tree_id);
         $mainSubjects = array();
         foreach ($allSubjects as $s) {
-            if (!in_array($s, $this->exclude_sem_tree_ids)) {
-
-                if (!in_array($s, $this->invisible_sem_tree_ids)) {
-                    $mainSubjects[] = $s;
-                }
+            if (in_array($s, $this->visible_sem_tree_ids)) {
+                $mainSubjects[] = $s;
             }
         }
 

@@ -15,28 +15,15 @@ class certificate_zfs extends certificate {
 		"Kompetenzbereichen Seminare besucht haben, beweisen damit ".
 		"Eigeninitiative und eine hohe Motivation zur persönlichen ".
 		"Weiterentwicklung.";
-    public $exclude_sem_tree_ids = array(
-        'c0b4af8e91ef5022141ec58f17e69b21',
-        '814e28f539e0952dfe1f35bca8800bee'
-    );
-    public $invisible_sem_tree_ids = array(
-        'c0b4af8e91ef5022141ec58f17e69b21',
+    public $process_only_ids = [
         '814e28f539e0952dfe1f35bca8800bee',
-        '30906bf846b53c8a9e2fe21d2180f818',
-        '6a29bdcc362a3c2f5ea09efda19c5e49',
-        '42e7d7a3481c706ed1d54dc072d552e0',
-        '701cff7eda6876be28da2fcd62ded48a',
-        '0b30d769e0dcf80fda308272b87814ca',
-        '7df63ae06d54e6c6ed7dcd48b80259a0',
-        '9d88ab9caba20e819765c4b5a96b63b2',
-        '855037ff174597580d4ba3f1267a9328',
-        '304aa7e5e378dc260ffa596d7df50559',
-        '04f08c9ca84f098d236d2befd6da7940',
-        '2b86bdce5d33e98ac4f205e841c2354b',
-        '0db0a0bb3aab3cd62dcd8c17fa20b312',
-        'bccb57d8ab0d9790506b6709faef7700',
-        'b3c835fe3857b319ba883279c1aee454',
-        'd2a285dd346228c7858390c40ab183cc'
+        'sbZfS05'
+    ];
+    public $visible_sem_tree_ids = array(
+        '303c7d8ba8ea844b29849deff2efbf0a',
+        'cfe64d3e5142bcbe212daacc9aaec327',
+        'c4f61f4304c79ea9f97ba285d0fb8c4b',
+        'sbZfS05'
     );
 
     public function export() {
@@ -86,6 +73,8 @@ class certificate_zfs extends certificate {
         $pdf->SetY($pdf->GetY() + $topMargin);
 //new dBug($this->tree->children);
 //die;
+        // Keep track of processed courses.
+        $processed = [];
 // Studiengaenge ausgeben
         foreach ($this->header as $header => $item) {
                 $pdf->SetFont('Arial', 'B', $headersize);
@@ -93,26 +82,31 @@ class certificate_zfs extends certificate {
 
 // Veranstaltungen ausgeben
                 foreach ($item as $ver) {
-                    //new dBug($ver);
-                    $pdf->SetFont('Arial', '', $textsize);
-                    $tmp = $ver['Name'];
+                    if (!in_array($ver['Seminar_id'], $processed)) {
+                        //new dBug($ver);
+                        $pdf->SetFont('Arial', '', $textsize);
+                        $tmp = $ver['Name'];
 
-// Dozenten und Stunden ausgeben
-                    $tmp .= ' (' . date('d.m.Y', $ver['start']);
+                        // Dozenten und Stunden ausgeben
+                        $tmp .= ' (' . date('d.m.Y', $ver['start']);
 
-                    if (date('d.m.Y', $ver['start']) != date('d.m.Y', $ver['end'])) {
-                        $tmp .= ' - ' . date('d.m.Y', $ver['end']);
-                    }
+                        if (date('d.m.Y', $ver['start']) != date('d.m.Y', $ver['end'])) {
+                            $tmp .= ' - ' . date('d.m.Y', $ver['end']);
+                        }
 
-                    if ($ver['dauer']) {
-                        $tmp .= ', ' . $ver['dauer'];
+                        if ($ver['dauer']) {
+                            $tmp .= ', ' . $ver['dauer'];
+                        }
+                        $tmp .= ')';
+                        if (!empty($ver['dozenten'])) {
+                            $tmp .= ' - ';
+                            $tmp .= implode(", ", $ver['dozenten']);
+                        }
+                        $pdf->MultiCell(180, $cellHeight, legacy_studip_utf8decode($tmp), 0, "C");
+
+                        // Add course to processed entities so that everything is only shown once.
+                        $processed[] = $ver['Seminar_id'];
                     }
-                    $tmp .= ')';
-                    if (!empty($ver['dozenten'])) {
-                        $tmp .= ' - ';
-                        $tmp .= implode(", ", $ver['dozenten']);
-                    }
-                    $pdf->MultiCell(180, $cellHeight, legacy_studip_utf8decode($tmp), 0, "C");
                 }
                 $pdf->Ln(3);
         }

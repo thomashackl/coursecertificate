@@ -100,10 +100,8 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             $semtree_ids = array_filter($semtree->getKidsKids($this->sem_tree_id), function ($kid) use ($ids) {
                 return in_array($kid, $ids);
             });
-            PageLayout::postInfo('Process only selected semtree IDs.');
         } else {
             $semtree_ids = $semtree->getKidsKids($this->sem_tree_id);
-            PageLayout::postInfo('Process all semtree IDs.');
         }
         $parameters = array($this->user, $semtree_ids);
         $stmt->execute($parameters);

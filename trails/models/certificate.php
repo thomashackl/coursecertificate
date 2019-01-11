@@ -7,8 +7,6 @@ class certificate {
     public $semester = array();
     public $fullname;
     public $whitelist;
-    // exclude sem tree ids
-    public $exclude_sem_tree_ids = array();
 
     public function __construct($user = null, $whitelist = null) {
         if ($whitelist != null) {
@@ -102,13 +100,16 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
             $semtree_ids = array_filter($semtree->getKidsKids($this->sem_tree_id), function ($kid) use ($ids) {
                 return in_array($kid, $ids);
             });
+            PageLayout::postInfo('Process only selected semtree IDs.');
         } else {
             $semtree_ids = $semtree->getKidsKids($this->sem_tree_id);
+            PageLayout::postInfo('Process all semtree IDs.');
         }
         $parameters = array($this->user, $semtree_ids);
         $stmt->execute($parameters);
+        $this->allCourses = [];
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ((!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
+            if (!in_array($result['seminar_id'], $this->allCourses) && (!$this->whitelist || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['sem_tree_id'])) {
                 if ($this->start == 0 || $this->start > $result['start']) {
                     $this->start = $result['start'];
                 }
@@ -130,7 +131,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         $allSubjects = $this->getSortedKidsKids($semtree, $this->sem_tree_id);
         $mainSubjects = array();
         foreach ($allSubjects as $s) {
-            if (in_array($s, $this->visible_sem_tree_ids)) {
+            if (in_array($s, $this->visible_semtree_ids)) {
                 $mainSubjects[] = $s;
             }
         }

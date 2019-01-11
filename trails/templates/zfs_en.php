@@ -12,11 +12,11 @@ class certificate_zfs_en extends certificate {
         "resposonsibility while developing and training their self-management and autonomous learning skills. " .
         "As most ZKK courses are optional, students who make use of this offering demonstrate a high degree of ".
         "initiative and motivation for personal growth.";
-    public $process_only_ids = [
+    public $process_only_semtree_ids = [
         '814e28f539e0952dfe1f35bca8800bee',
         'sbZfS05'
     ];
-    public $visible_sem_tree_ids = array(
+    public $visible_semtree_ids = array(
         '303c7d8ba8ea844b29849deff2efbf0a',
         'cfe64d3e5142bcbe212daacc9aaec327',
         'c4f61f4304c79ea9f97ba285d0fb8c4b',

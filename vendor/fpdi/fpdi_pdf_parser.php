@@ -58,7 +58,7 @@ class fpdi_pdf_parser extends pdf_parser {
      *
      * @var array
      */
-    var $availableBoxes = array('/MediaBox', '/CropBox', '/BleedBox', '/TrimBox', '/ArtBox');
+    var $availableBoxes = ['/MediaBox', '/CropBox', '/BleedBox', '/TrimBox', '/ArtBox'];
         
     /**
      * Constructor
@@ -182,7 +182,7 @@ class fpdi_pdf_parser extends pdf_parser {
      * @return array
      */
     function _getPageContent($content_ref) {
-        $contents = array();
+        $contents = [];
         
         if ($content_ref[0] == PDF_TYPE_OBJREF) {
             $content = $this->pdf_resolve_object($this->c, $content_ref);
@@ -208,7 +208,7 @@ class fpdi_pdf_parser extends pdf_parser {
      * @return string
      */
     function _rebuildContentStream($obj) {
-        $filters = array();
+        $filters = [];
         
         if (isset($obj[1][1]['/Filter'])) {
             $_filter = $obj[1][1]['/Filter'];
@@ -288,7 +288,7 @@ class fpdi_pdf_parser extends pdf_parser {
             
         if (!is_null($box) && $box[0] == PDF_TYPE_ARRAY) {
             $b =& $box[1];
-            return array('x' => $b[0][1] / $k,
+            return ['x' => $b[0][1] / $k,
                          'y' => $b[1][1] / $k,
                          'w' => abs($b[0][1] - $b[2][1]) / $k,
                          'h' => abs($b[1][1] - $b[3][1]) / $k,
@@ -296,7 +296,7 @@ class fpdi_pdf_parser extends pdf_parser {
                          'lly' => min($b[1][1], $b[3][1]) / $k,
                          'urx' => max($b[0][1], $b[2][1]) / $k,
                          'ury' => max($b[1][1], $b[3][1]) / $k,
-                         );
+                         ];
         } else if (!isset ($page[1][1]['/Parent'])) {
             return false;
         } else {
@@ -322,7 +322,7 @@ class fpdi_pdf_parser extends pdf_parser {
      * @return array
      */
     function _getPageBoxes($page, $k) {
-        $boxes = array();
+        $boxes = [];
 
         foreach($this->availableBoxes AS $box) {
             if ($_box = $this->getPageBox($page, $box, $k)) {

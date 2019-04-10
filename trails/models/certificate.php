@@ -4,7 +4,7 @@ class certificate {
 
     public $user;
     public $tree;
-    public $semester = array();
+    public $semester = [];
     public $fullname;
     public $whitelist;
 
@@ -25,7 +25,7 @@ class certificate {
     }
 
     public function getCourses() {
-        return array();
+        return [];
     }
 
     public function loadTree() {
@@ -42,7 +42,7 @@ class certificate {
 WHERE su.seminar_id = ? AND status = 'dozent'";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($data['seminar_id']));
+        $stmt->execute([$data['seminar_id']]);
         $data['dozenten'] = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
@@ -51,7 +51,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
 
         // Check if we got a swsentry
         $sws = $db->prepare("SELECT content FROM datafields_entries WHERE range_id = ? AND datafield_id = '8554741ae3a5cfcc38c6741ab0c9ce5e'");
-        $sws->execute(array($data['seminar_id']));
+        $sws->execute([$data['seminar_id']]);
         if ($entry = $sws->fetchColumn(0)) {
             if ($lang == 'en_GB') {
                 $entry = str_replace(['Stunden', 'Stunde'], ['hours', 'hour'], $entry);
@@ -60,7 +60,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         } else {
             // Try to guess it
             $stmt = $db->prepare("SELECT ROUND((SUM(end_time - date) / 3600), 0) FROM termine WHERE range_id = ?");
-            $stmt->execute(array($data['seminar_id']));
+            $stmt->execute([$data['seminar_id']]);
             $duration = $stmt->fetch(PDO::FETCH_COLUMN, 0);
             if ($duration && $duration != 0) {
                 $data['dauer'] = $duration . ' '.($duration == 1 ?
@@ -71,7 +71,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     }
 
     public function loadSeminars() {
-        $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
+        $semtree = TreeAbstract::getInstance('StudipSemTree', ['visible_only' => 1]);
         $sql = "SELECT DISTINCT s.Seminar_id, s.VeranstaltungsNummer, s.Name, sd.description as semester,
             sst.sem_tree_id, s.seminar_id, MIN(t.date) start, MAX(t.end_time) end,
             s.ects, s.Beschreibung, su.`status`
@@ -103,7 +103,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         } else {
             $semtree_ids = $semtree->getKidsKids($this->sem_tree_id);
         }
-        $parameters = array($this->user, $semtree_ids);
+        $parameters = [$this->user, $semtree_ids];
         $stmt->execute($parameters);
         $this->allCourses = [];
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -124,10 +124,10 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     }
 
     public function loadSeminarsForPDF($lang = 'de_DE') {
-        $this->header = array();
-        $semtree = TreeAbstract::getInstance('StudipSemTree', array('visible_only' => 1));
+        $this->header = [];
+        $semtree = TreeAbstract::getInstance('StudipSemTree', ['visible_only' => 1]);
         $allSubjects = $this->getSortedKidsKids($semtree, $this->sem_tree_id);
-        $mainSubjects = array();
+        $mainSubjects = [];
         foreach ($allSubjects as $s) {
             if (in_array($s, $this->visible_semtree_ids)) {
                 $mainSubjects[] = $s;
@@ -158,9 +158,9 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
         $stmt = $db->prepare($sql);
         foreach ($mainSubjects as $subject) {
             if ($this->whitelist) {
-                $parameters = array($this->user, array_merge(array($subject), $semtree->getKidsKids($subject)), $this->whitelist);
+                $parameters = [$this->user, array_merge([$subject], $semtree->getKidsKids($subject)), $this->whitelist];
             } else {
-                $parameters = array($this->user, array_merge(array($subject), $semtree->getKidsKids($subject)));
+                $parameters = [$this->user, array_merge([$subject], $semtree->getKidsKids($subject))];
             }
             $stmt->execute($parameters);
             $i=0;
@@ -210,7 +210,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
     protected function getSortedKidsKids(&$semtree, $item_id, $in_recursion = false){
         static $kidskids;
         if (!$kidskids || !$in_recursion){
-            $kidskids = array();
+            $kidskids = [];
         }
         $num_kids = $semtree->getNumKids($item_id);
         if ($num_kids){

@@ -21,7 +21,7 @@ if (!class_exists('FilterLZW', false)) {
 
     class FilterLZW {
         
-        var $sTable = array();
+        var $sTable = [];
         var $data = null;
         var $dataLength = 0;
         var $tIdx;
@@ -30,7 +30,7 @@ if (!class_exists('FilterLZW', false)) {
         var $bitPointer;
         var $nextData = 0;
         var $nextBits = 0;
-        var $andTable = array(511, 1023, 2047, 4095);
+        var $andTable = [511, 1023, 2047, 4095];
     
         function error($msg) {
             die($msg);
@@ -103,7 +103,7 @@ if (!class_exists('FilterLZW', false)) {
          * Initialize the string table.
          */
         function initsTable() {
-            $this->sTable = array();
+            $this->sTable = [];
     
             for ($i = 0; $i < 256; $i++)
                 $this->sTable[$i] = chr($i);

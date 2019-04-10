@@ -63,7 +63,7 @@ if (!class_exists('pdf_context')) {
     	        $this->length = strlen($this->buffer);
     	    }
     		$this->offset = 0;
-    		$this->stack = array();
+    		$this->stack = [];
     	}
     
     	// Make sure that there is at least one

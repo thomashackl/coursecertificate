@@ -12,14 +12,14 @@ class certificate_profi_ru extends certificate {
 
         $fullname = get_fullname_from_uname($_POST['user']);
 
-        $selectedCourses = array();
+        $selectedCourses = [];
         $count = 0;
 
 // Check which sem_tree items are relevant
-        $semTree = new StudipSemTree(array('visible_only' => true));
-        $semTreeIds = array();
+        $semTree = new StudipSemTree(['visible_only' => true]);
+        $semTreeIds = [];
         foreach ($_POST['sem_tree_ids'] as $semTreeItem) {
-            $semTreeIds = array_merge($semTreeIds, $semTree->getKidsKids($semTreeItem), array($semTreeItem));
+            $semTreeIds = array_merge($semTreeIds, $semTree->getKidsKids($semTreeItem), [$semTreeItem]);
         }
 
 // Get course data.
@@ -34,12 +34,12 @@ class certificate_profi_ru extends certificate {
         $db->query($query);
         while ($db->next_record()) {
             $selectedCourses[$db->f('sem_tree_id')]['name'] = $db->f('sem_tree_name');
-            $selectedCourses[$db->f('sem_tree_id')]['sem'][] = array(
+            $selectedCourses[$db->f('sem_tree_id')]['sem'][] = [
                 'id' => $db->f("Seminar_id"),
                 'name' => $db->f("Name"),
                 'ects' => $db->f('ects'),
                 'description' => $db->f('Beschreibung')
-            );
+            ];
             $count++;
         }
     }

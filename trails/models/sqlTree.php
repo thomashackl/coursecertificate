@@ -11,7 +11,7 @@ class sqlTree extends leafTree {
     public function loadChildrenFromSQL($db, $table, $idCol = "id", $parentidCol = "parent_id") {
         $sql = sprintf($this->SQL, $table, $parentidCol);
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->id));
+        $stmt->execute([$this->id]);
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $child = $this->addNewChild();
             $child->setID($result[$idCol]);
@@ -32,7 +32,7 @@ class sqlTree extends leafTree {
     public function loadFromSQL($db, $table, $idCol = "id") {
         $sql = sprintf($this->SQL, $table, $idCol);
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->id));
+        $stmt->execute([$this->id]);
         if ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $this->setData($result);
         }
@@ -41,7 +41,7 @@ class sqlTree extends leafTree {
     public function hasSQLChildren($db, $table, $idCol = "id", $parentidCol = "parent_id") {
         $sql = sprintf($this->SQL, $table, $parentidCol) . " LIMIT 1";
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->id));
+        $stmt->execute([$this->id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

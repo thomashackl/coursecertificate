@@ -16,10 +16,10 @@ class IndexController extends StudipController {
         $psearch = new PermissionSearch('user',
             _('Person suchen'),
             'username',
-            array(
-                'permission' => array('user', 'autor', 'tutor', 'dozent'),
-                'exclude_user' => array()
-            )
+            [
+                'permission' => ['user', 'autor', 'tutor', 'dozent'],
+                'exclude_user' => []
+            ]
         );
 
         $this->quicksearch = QuickSearch::get("username", $psearch)
@@ -32,7 +32,7 @@ class IndexController extends StudipController {
     public function index_action() {
         Navigation::activateItem('/tools/coursecert');
 
-        $this->semester = array();
+        $this->semester = [];
         if ($user = Request::get('username')) {
             $classname = "certificate_" . Request::get('certificate');
             $this->cert = new $classname($user, Request::getArray('whitelist'));
@@ -46,7 +46,7 @@ class IndexController extends StudipController {
 
     private function load_templates() {
         $paths = glob($this->dispatcher->trails_root . '/templates/*.php');
-        $templates = array();
+        $templates = [];
         foreach ($paths as $path) {
             include $path;
             $classname = "certificate_" . basename($path, ".php");

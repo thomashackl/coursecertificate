@@ -47,14 +47,14 @@ function LoadMap($enc)
 	$a = file($file);
 	if(empty($a))
 		Error('Encoding not found: '.$enc);
-	$map = array_fill(0, 256, array('uv'=>-1, 'name'=>'.notdef'));
+	$map = array_fill(0, 256, ['uv'=>-1, 'name'=>'.notdef']);
 	foreach($a as $line)
 	{
 		$e = explode(' ', rtrim($line));
 		$c = hexdec(substr($e[0],1));
 		$uv = hexdec(substr($e[1],2));
 		$name = $e[2];
-		$map[$c] = array('uv'=>$uv, 'name'=>$name);
+		$map[$c] = ['uv'=>$uv, 'name'=>$name];
 	}
 	return $map;
 }
@@ -80,7 +80,7 @@ function GetInfoFromTrueType($file, $embed, $map)
 	$info['Descender'] = round($k*$ttf->typoDescender);
 	$info['UnderlineThickness'] = round($k*$ttf->underlineThickness);
 	$info['UnderlinePosition'] = round($k*$ttf->underlinePosition);
-	$info['FontBBox'] = array(round($k*$ttf->xMin), round($k*$ttf->yMin), round($k*$ttf->xMax), round($k*$ttf->yMax));
+	$info['FontBBox'] = [round($k*$ttf->xMin), round($k*$ttf->yMin), round($k*$ttf->xMax), round($k*$ttf->yMax)];
 	$info['CapHeight'] = round($k*$ttf->capHeight);
 	$info['MissingWidth'] = round($k*$ttf->widths[0]);
 	$widths = array_fill(0, 256, $info['MissingWidth']);
@@ -163,7 +163,7 @@ function GetInfoFromType1($file, $embed, $map)
 		elseif($entry=='IsFixedPitch')
 			$info['IsFixedPitch'] = ($e[1]=='true');
 		elseif($entry=='FontBBox')
-			$info['FontBBox'] = array((int)$e[1], (int)$e[2], (int)$e[3], (int)$e[4]);
+			$info['FontBBox'] = [(int)$e[1], (int)$e[2], (int)$e[3], (int)$e[4]];
 		elseif($entry=='CapHeight')
 			$info['CapHeight'] = (int)$e[1];
 		elseif($entry=='StdVW')

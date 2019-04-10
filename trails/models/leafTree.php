@@ -23,7 +23,7 @@ class leafTree {
 
     public function addChild($child) {
         if (!is_array($this->children)) {
-            $this->children = array();
+            $this->children = [];
         }
         $child->setParent($this);
         array_push($this->children, $child);

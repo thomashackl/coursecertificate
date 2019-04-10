@@ -8,7 +8,7 @@ function LoadData($file)
 {
 	// Read file lines
 	$lines = file($file);
-	$data = array();
+	$data = [];
 	foreach($lines as $line)
 		$data[] = explode(';',trim($line));
 	return $data;
@@ -34,7 +34,7 @@ function BasicTable($header, $data)
 function ImprovedTable($header, $data)
 {
 	// Column widths
-	$w = array(40, 35, 40, 45);
+	$w = [40, 35, 40, 45];
 	// Header
 	for($i=0;$i<count($header);$i++)
 		$this->Cell($w[$i],7,$header[$i],1,0,'C');
@@ -62,7 +62,7 @@ function FancyTable($header, $data)
 	$this->SetLineWidth(.3);
 	$this->SetFont('','B');
 	// Header
-	$w = array(40, 35, 40, 45);
+	$w = [40, 35, 40, 45];
 	for($i=0;$i<count($header);$i++)
 		$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
 	$this->Ln();
@@ -88,7 +88,7 @@ function FancyTable($header, $data)
 
 $pdf = new PDF();
 // Column headings
-$header = array('Country', 'Capital', 'Area (sq km)', 'Pop. (thousands)');
+$header = ['Country', 'Capital', 'Area (sq km)', 'Pop. (thousands)'];
 // Data loading
 $data = $pdf->LoadData('countries.txt');
 $pdf->SetFont('Arial','',14);

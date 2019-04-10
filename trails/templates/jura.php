@@ -12,12 +12,12 @@ class certificate_jura extends certificate {
         '814e28f539e0952dfe1f35bca8800bee',
         'sbZfS05'
     ];
-    public $visible_semtree_ids = array(
+    public $visible_semtree_ids = [
         '303c7d8ba8ea844b29849deff2efbf0a',
         'cfe64d3e5142bcbe212daacc9aaec327',
         'c4f61f4304c79ea9f97ba285d0fb8c4b',
         'sbZfS05'
-    );
+    ];
 
     public function export($seminars) {
         $this->loadSeminarsForPDF();
@@ -109,9 +109,9 @@ class certificate_jura extends certificate {
             ORDER BY su.`position`, md5.`Nachname`, md5.`Vorname`, md5.`username`";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($data['seminar_id']));
+        $stmt->execute([$data['seminar_id']]);
         $lecturers = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-        $data['dozenten'] = array();
+        $data['dozenten'] = [];
         foreach ($lecturers as $l) {
             $u = User::find($l);
             $name = $u->getFullname();
@@ -120,7 +120,7 @@ class certificate_jura extends certificate {
                 FROM `datafields_entries`
                 WHERE `range_id`=?
                     AND `datafield_id`='e96d12f041e6a432e8f9c77a026b3731'",
-                array($l));
+                [$l]);
             if ($datafield[0]) {
                 $name .= ' ('.$datafield[0].')';
             }

@@ -75,7 +75,7 @@ class FPDI extends FPDF_TPL {
      * Cache for imported pages/template ids
      * @var array
      */
-    var $_importedPages = array();
+    var $_importedPages = [];
     
     /**
      * Set a source-file
@@ -167,7 +167,7 @@ class FPDI extends FPDF_TPL {
         $box = $pageboxes[$boxName];
         
         $this->tpl++;
-        $this->tpls[$this->tpl] = array();
+        $this->tpls[$this->tpl] = [];
         $tpl =& $this->tpls[$this->tpl];
         $tpl['parser'] =& $parser;
         $tpl['resources'] = $parser->getPageResources();
@@ -217,7 +217,7 @@ class FPDI extends FPDF_TPL {
         if ($adjustPageSize == true && is_null($_x) && is_null($_y)) {
             $size = $this->getTemplateSize($tplidx, $_w, $_h);
             $orientation = $size['w'] > $size['h'] ? 'L' : 'P';
-            $size = array($size['w'], $size['h']);
+            $size = [$size['w'], $size['h']];
             
             if (is_subclass_of($this, 'TCPDF')) {
             	$this->setPageFormat($size, $orientation);
@@ -242,7 +242,7 @@ class FPDI extends FPDF_TPL {
 					$this->PageBreakTrigger = $this->h-$this->bMargin;
 					$this->CurOrientation = $orientation;
 					$this->CurPageSize = $size;
-					$this->PageSizes[$this->page] = array($this->wPt, $this->hPt);
+					$this->PageSizes[$this->page] = [$this->wPt, $this->hPt];
 				}
             } 
         }
@@ -477,8 +477,8 @@ class FPDI extends FPDF_TPL {
     			
     			if (!isset($this->_don_obj_stack[$cpfn][$value[1]])) {
     			    $this->_newobj(false, true);
-    			    $this->_obj_stack[$cpfn][$value[1]] = array($this->n, $value);
-                    $this->_don_obj_stack[$cpfn][$value[1]] = array($this->n, $value); // Value is maybee obsolete!!!
+    			    $this->_obj_stack[$cpfn][$value[1]] = [$this->n, $value];
+                    $this->_don_obj_stack[$cpfn][$value[1]] = [$this->n, $value]; // Value is maybee obsolete!!!
                 }
                 $objid = $this->_don_obj_stack[$cpfn][$value[1]][0];
 

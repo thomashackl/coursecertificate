@@ -44,7 +44,7 @@ function WriteHTML($html)
 				// Extract attributes
 				$a2 = explode(' ',$e);
 				$tag = strtoupper(array_shift($a2));
-				$attr = array();
+				$attr = [];
 				foreach($a2 as $v)
 				{
 					if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
@@ -81,7 +81,7 @@ function SetStyle($tag, $enable)
 	// Modify style and select corresponding font
 	$this->$tag += ($enable ? 1 : -1);
 	$style = '';
-	foreach(array('B', 'I', 'U') as $s)
+	foreach(['B', 'I', 'U'] as $s)
 	{
 		if($this->$s>0)
 			$style .= $s;

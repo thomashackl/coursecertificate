@@ -111,7 +111,7 @@ if (!class_exists('pdf_parser')) {
             $this->c = new pdf_context($this->f);
             
             // Read xref-Data
-            $this->xref = array();
+            $this->xref = [];
             $this->pdf_read_xref($this->xref, $this->pdf_find_xref());
             
             // Check for Encryption
@@ -283,7 +283,7 @@ if (!class_exists('pdf_parser')) {
                             break;
                         case 3:
                             if (!isset($result['xref'][$start]))
-                                $result['xref'][$start] = array();
+                                $result['xref'][$start] = [];
                             
                             if (!array_key_exists($gen = (int) $pieces[1], $result['xref'][$start])) {
                     	        $result['xref'][$start][$gen] = $pieces[2] == 'n' ? (int) $pieces[0] : null;
@@ -362,14 +362,14 @@ if (!class_exists('pdf_parser')) {
         				$result = substr ($c->buffer, $c->offset, $match - $c->offset);
         				$c->offset = $match + 1;
         				
-        				return array (PDF_TYPE_HEX, $result);
+        				return  [PDF_TYPE_HEX, $result];
                     }
                     
                     break;
         		case	'<<':
         			// This is a dictionary.
     
-        			$result = array();
+        			$result = [];
     
         			// Recurse into this function until we reach
         			// the end of the dictionary.
@@ -384,19 +384,19 @@ if (!class_exists('pdf_parser')) {
         				
         				// Catch missing value
         				if ($value[0] == PDF_TYPE_TOKEN && $value[1] == '>>') {
-        				    $result[$key] = array(PDF_TYPE_NULL);
+        				    $result[$key] = [PDF_TYPE_NULL];
         				    break;
         				}
         				
         				$result[$key] = $value;
         			}
     				
-        			return array (PDF_TYPE_DICTIONARY, $result);
+        			return  [PDF_TYPE_DICTIONARY, $result];
     
         		case	'[':
         			// This is an array.
     
-        			$result = array();
+        			$result = [];
     
         			// Recurse into this function until we reach
         			// the end of the array.
@@ -412,7 +412,7 @@ if (!class_exists('pdf_parser')) {
         				$result[] = $value;
         			}
         			
-                    return array (PDF_TYPE_ARRAY, $result);
+                    return  [PDF_TYPE_ARRAY, $result];
     
         		case	'('		:
                     // This is a string
@@ -437,7 +437,7 @@ if (!class_exists('pdf_parser')) {
         			$result = substr($c->buffer, $c->offset, $pos - $c->offset - 1);
         			$c->offset = $pos;
         			
-        			return array (PDF_TYPE_STRING, $result);
+        			return  [PDF_TYPE_STRING, $result];
     
                 case 'stream':
                 	$o_pos = ftell($c->file)-strlen($c->buffer);
@@ -467,7 +467,7 @@ if (!class_exists('pdf_parser')) {
     		        }
     		        $c->reset($startpos + $e + $length + 9); // 9 = strlen("endstream")
     		        
-    		        return array(PDF_TYPE_STREAM, $v);
+    		        return [PDF_TYPE_STREAM, $v];
     		        
     	        default	:
                 	if (is_numeric ($token)) {
@@ -484,9 +484,9 @@ if (!class_exists('pdf_parser')) {
         						if (($tok3 = $this->pdf_read_token ($c)) !== false) {
                                     switch ($tok3) {
         								case 'obj':
-                                            return array (PDF_TYPE_OBJDEC, (int) $token, (int) $tok2);
+                                            return  [PDF_TYPE_OBJDEC, (int) $token, (int) $tok2];
         								case 'R':
-        									return array (PDF_TYPE_OBJREF, (int) $token, (int) $tok2);
+        									return  [PDF_TYPE_OBJREF, (int) $token, (int) $tok2];
         							}
         							// If we get to this point, that numeric value up
         							// there was just a numeric value. Push the extra
@@ -499,16 +499,16 @@ if (!class_exists('pdf_parser')) {
         				}
     
         				if ($token === (string)((int)$token))
-            				return array (PDF_TYPE_NUMERIC, (int)$token);
+            				return  [PDF_TYPE_NUMERIC, (int)$token];
         				else 
-        					return array (PDF_TYPE_REAL, (float)$token);
+        					return  [PDF_TYPE_REAL, (float)$token];
         			} else if ($token == 'true' || $token == 'false') {
-                        return array (PDF_TYPE_BOOLEAN, $token == 'true');
+                        return  [PDF_TYPE_BOOLEAN, $token == 'true'];
         			} else if ($token == 'null') {
-        			   return array (PDF_TYPE_NULL);
+        			   return  [PDF_TYPE_NULL];
         			} else {
                         // Just a token. Return it.
-        				return array (PDF_TYPE_TOKEN, $token);
+        				return  [PDF_TYPE_TOKEN, $token];
         			}
              }
         }
@@ -552,7 +552,7 @@ if (!class_exists('pdf_parser')) {
         				if (preg_match('/' . $toSearchFor . '/', $c->buffer)) {
         					$c->offset = strpos($c->buffer, $toSearchFor) + strlen($toSearchFor);
         					// reset stack
-        					$c->stack = array();
+        					$c->stack = [];
         				} else {
 	        				$this->error("Unable to find object ({$obj_spec[1]}, {$obj_spec[2]}) at expected location");
         				}
@@ -561,14 +561,14 @@ if (!class_exists('pdf_parser')) {
         			// If we're being asked to store all the information
         			// about the object, we add the object ID and generation
         			// number for later use
-    				$result = array();
+    				$result = [];
     				$this->actual_obj =& $result;
         			if ($encapsulate) {
-        				$result = array (
+        				$result =  [
         					PDF_TYPE_OBJECT,
         					'obj' => $obj_spec[1],
         					'gen' => $obj_spec[2]
-        				);
+        				];
         			} 
     
         			// Now simply read the object data until

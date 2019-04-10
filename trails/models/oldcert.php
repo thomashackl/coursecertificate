@@ -4,7 +4,7 @@ class certificate {
 
     public $user;
     public $tree;
-    public $semester = array();
+    public $semester = [];
     public $fullname;
     public $whitelist;
 
@@ -23,7 +23,7 @@ class certificate {
     }
 
     public function getCourses() {
-        return array();
+        return [];
     }
 
     public function loadTree() {
@@ -40,7 +40,7 @@ class certificate {
 WHERE su.seminar_id = ? AND status = 'dozent'";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($data['seminar_id']));
+        $stmt->execute([$data['seminar_id']]);
         $data['dozenten'] = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
@@ -49,7 +49,7 @@ WHERE su.seminar_id = ? AND status = 'dozent'";
 WHERE range_id = ?";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($data['seminar_id']));
+        $stmt->execute([$data['seminar_id']]);
         $data['dauer'] = $stmt->fetch(PDO::FETCH_COLUMN, 0);
     }
 
@@ -70,7 +70,7 @@ WHERE range_id = ?";
             ORDER BY s.start_time";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->user));
+        $stmt->execute([$this->user]);
         $test = $stmt->fetchAll(PDO::FETCH_ASSOC);
         while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ((!$this->whitelist == null || in_array($result['seminar_id'], $this->whitelist)) && $obj = $this->tree->search($result['parent'])) {

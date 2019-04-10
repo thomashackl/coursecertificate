@@ -61,10 +61,10 @@ class TCPDF_FPDF extends TCPDF {
 			case PDF_TYPE_STREAM:
 			    if ($this->encrypted) {
 			        $value[2][1] = $this->_encrypt_data($this->_current_obj_id, $value[2][1]);
-			        $value[1][1]['/Length'] = array(
+			        $value[1][1]['/Length'] = [
                         PDF_TYPE_NUMERIC,
                         strlen($value[2][1])
-                    );
+                    ];
                 }
                 break;
                 
@@ -152,7 +152,7 @@ class TCPDF_FPDF extends TCPDF {
      * @return string
      */
     function hex2str($hex) {
-    	return pack('H*', str_replace(array("\r", "\n", ' '), '', $hex));
+    	return pack('H*', str_replace(["\r", "\n", ' '], '', $hex));
     }
     
     /**

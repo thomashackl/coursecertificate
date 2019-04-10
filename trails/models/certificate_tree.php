@@ -5,7 +5,7 @@
  */
 class certificate_tree extends sqlTree {
 
-    public $seminars = array();
+    public $seminars = [];
 
     public function search($id) {
         if ($id == $this->id) {
@@ -27,7 +27,7 @@ class certificate_tree extends sqlTree {
     }
 
     public function getChildrenWithSeminars() {
-        $result = array();
+        $result = [];
         foreach ($this->children as $child) {
             if (count($child->seminare))
                 $result[] = $child;

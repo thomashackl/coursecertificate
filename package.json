@@ -1,0 +1,58 @@
+{
+    "name": "@studip/coursecertificate",
+    "version": "3.0.0",
+    "description": "Stud.IP plugin for generating course certificates",
+    "license": "GPL-2.0",
+    "private": true,
+    "scripts": {
+        "extract-gettext-vue": "node_modules/.bin/gettext-extract --removeHTMLWhitespaces --attribute v-translate --output locale/phonebook-vue.pot $(find resources/vue/components -type f -name '*.vue')",
+        "extract-gettext-php": "> locale/phonebook-php.pot && find . -iname '*.php' | xargs xgettext --from-code=UTF-8 -j -n --language=PHP -o locale/phonebook-php.pot",
+        "extract-gettext": "npm run extract-gettext-vue && npm run extract-gettext-php && msgcat locale/phonebook-*.pot > locale/phonebook.pot && rm locale/phonebook-*.pot",
+        "compile-gettext": "msgfmt locale/en/LC_MESSAGES/phonebook.po --output-file locale/en/LC_MESSAGES/phonebook.mo && node_modules/.bin/gettext-compile --output locale/en/LC_MESSAGES/phonebook.json locale/en/LC_MESSAGES/phonebook.po",
+        "wds": "webpack-dev-server --progress --config webpack.dev-server.js",
+        "webpack-dev": "webpack --config webpack.dev.js --mode development",
+        "webpack-prod": "webpack --config webpack.prod.js --mode production"
+    },
+    "author": "Thomas Hackl <thomas.hackl@uni-passau.de>",
+    "repository": {
+        "type": "git",
+        "url": "https://vcs.uni-passau.de/referat-applikationen/studip/corusecertificate"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "autoprefixer": "^9.8.6",
+        "css-loader": "^4.2.2",
+        "easygettext": "^2.14.0",
+        "favico.js": "^0.3.10",
+        "mini-css-extract-plugin": "^0.10.0",
+        "node-sass": "^4.14.1",
+        "optimize-css-assets-webpack-plugin": "^5.0.3",
+        "postcss-loader": "^3.0.0",
+        "sass-loader": "^10.0.0",
+        "style-loader": "^1.2.1",
+        "terser-webpack-plugin": "^4.1.0",
+        "url-loader": "^4.1.0",
+        "vue": "^2.6.12",
+        "vue-gettext": "^2.1.10",
+        "vue-loader": "^15.9.3",
+        "vue-template-compiler": "^2.6.12",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0",
+        "webpack-merge": "^5.1.2"
+    },
+    "eslintConfig": {
+        "env": {
+            "browser": true
+        },
+        "parserOptions": {
+            "ecmaVersion": 6,
+            "sourceType": "module"
+        }
+    },
+    "prettier": {
+        "printWidth": 120,
+        "singleQuote": true,
+        "tabWidth": 4
+    }
+}
